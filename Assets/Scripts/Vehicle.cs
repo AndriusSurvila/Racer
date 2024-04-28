@@ -8,15 +8,20 @@ public class Vehicle : MonoBehaviour
     public float rotateSpeed = 1.0f;
 
     Rigidbody rb;
+    public AudioSource engineSound;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        engineSound = GetComponent<AudioSource>();
     }
 
     void Update()
     {
-        print((int)(rb.velocity.magnitude * 3.6f) + "km/h");    
+        print((int)(rb.velocity.magnitude * 3.6f) + "km/h");
+
+        var speedRatio = rb.velocity.magnitude / speed;
+        engineSound.pitch = 1f + 2f * speedRatio;
     }
 
     public void Steer(float value)
