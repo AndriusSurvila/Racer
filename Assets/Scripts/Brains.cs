@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Brains : MonoBehaviour
@@ -13,6 +11,7 @@ public class Brains : MonoBehaviour
 
     void Update()
     {
+        print(Mathf.PerlinNoise1D(Time.time));
         vehicle.Steer(Mathf.PerlinNoise1D(Time.time) * 2 - 1);
         vehicle.Accelerate();
     }
