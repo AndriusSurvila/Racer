@@ -13,7 +13,7 @@ public class Brains : MonoBehaviour
 
     void Update()
     {
-        vehicle.Steer(Random.Range(-1f, 1f));
+        vehicle.Steer(Mathf.PerlinNoise1D(Time.time) * 2 - 1);
         vehicle.Accelerate();
     }
 }
