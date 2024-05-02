@@ -17,6 +17,7 @@ public class Vehicle : MonoBehaviour
     public float sightDrag = 1f;
     public float drag = 5f;
     public bool isAccelerating;
+    public Transform[] wheels;
 
     void Start()
     {
@@ -52,6 +53,12 @@ public class Vehicle : MonoBehaviour
     public void Steer(float value)
     {
         transform.Rotate(0, value * rotateSpeed * rotateSpeedCurve.Evaluate(speedRatio) * speedRatio * Time.deltaTime, 0);
+
+        foreach (var wheel in wheels)
+        {
+            float rotationAngle = value * rotateSpeed * rotateSpeedCurve.Evaluate(speedRatio) * speedRatio;
+            wheel.Rotate(new Vector3(rotationAngle, 0, 0));
+        }
     }
 
     public void Accelerate()
