@@ -18,11 +18,16 @@ public class Brains : MonoBehaviour
 
     void Update()
     {
+        float distanceToTarget = Vector3.Distance(transform.position, targetPos);
         Debug.DrawLine(transform.position, targetPos, Color.red);
 
-        if (Vector3.Distance(transform.position, targetPos) < 5)
+        if (distanceToTarget < 5)
         {
             targetPos = path.GetNextPoint(transform.position);
+        }
+        else if (distanceToTarget < 5) 
+        {
+            vehicle.Brake();
         }
 
         var angle = Vector3.SignedAngle(transform.forward, targetPos - transform.position, Vector3.up);

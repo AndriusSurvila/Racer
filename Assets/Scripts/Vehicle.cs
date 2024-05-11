@@ -13,11 +13,13 @@ public class Vehicle : MonoBehaviour
     public AudioSource engineSound;
     public AnimationCurve pitchCurve;
     public AnimationCurve rotateSpeedCurve;
-    float speedRatio;
+    public float speedRatio;
     public float sightDrag = 1f;
     public float drag = 5f;
     public bool isAccelerating;
     public Transform[] wheels;
+    Vector3 localVelocity;
+    public ParticleSystem brakeParticles;
 
     void Start()
     {
@@ -33,7 +35,7 @@ public class Vehicle : MonoBehaviour
         speedRatio = rb.velocity.magnitude / maxSpeed;
         engineSound.pitch = pitchCurve.Evaluate(speedRatio);
 
-        var localVelocity = transform.InverseTransformVector(rb.velocity);
+        localVelocity = transform.InverseTransformVector(rb.velocity);
 
         rb.velocity += -transform.right * localVelocity.x * sightDrag * Time.deltaTime;
 
@@ -45,15 +47,23 @@ public class Vehicle : MonoBehaviour
         if (Mathf.Abs(localVelocity.normalized.x) > 0.5f)
         {
             print("drift");
+            var emmision = brakeParticles.emission;
+            emmision.enabled = true;
+        }
+        else
+        {
+            var emmision = brakeParticles.emission;
+            emmision.enabled = false;
         }
 
         isAccelerating = false;
+        brakeParticles.Stop();
     }
 
     public void Steer(float value)
     {
         value = Mathf.Clamp(value, -1, 1);
-        transform.Rotate(0, value * rotateSpeed * rotateSpeedCurve.Evaluate(speedRatio) * speedRatio * Time.deltaTime, 0);
+        transform.Rotate(0, value * rotateSpeed * rotateSpeedCurve.Evaluate(speedRatio) * Mathf.Sign(localVelocity.z) * Time.deltaTime, 0);
 
         foreach (var wheel in wheels)
         {
